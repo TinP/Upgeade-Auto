@@ -4,17 +4,7 @@
   hosts: [172.18.173.64]
   connection: network_cli
   gather_facts: no
-  connection: local
-  ignore_errors: yes
   become: yes
   tasks:
   - name: Run 'Base Line'
-    ios_command:
-      commands:
-        - show run
-        - show version
-        - show ip interface br
-        - show boot
-        - show inventory
-
-    register: output
+ 
