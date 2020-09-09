@@ -1,6 +1,5 @@
 ---
 
-
   - name: Run 'Base Line Configuration'
 
     ios_command:
@@ -26,4 +25,5 @@
       }}"
 
       dest: "/mnt/d/Lab/NTT-Automate/{{ inventory_hostname }} before.txt"
+
 ...
