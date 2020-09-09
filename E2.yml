@@ -2,7 +2,7 @@
 
 - name: Show Commands Playbook
   hosts: 172.18.173.64
-  connection: network_cli
+  connection: local
   gather_facts: no
   become: yes
   tasks:
