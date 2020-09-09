@@ -1,13 +1,14 @@
 ---
 
 - name: Show Commands Playbook
+  hosts: local
+  gather_facts: no
+  connection: local
   ignore_errors: yes
+
   tasks:
-
   - name: Run 'Base Line'
-
     ios_command:
-
       commands:
         - show run
         - show version
