@@ -1,12 +1,12 @@
 ---
 
 - name: Show Commands Playbook
-  hosts: [172.18.173.64]
+  hosts: 172.18.173.64
   connection: network_cli
   gather_facts: no
   become: yes
+  tasks:
   - name: Run 'Base Line Configuration'
-
     ios_command:
       commands:
         - show run
@@ -20,7 +20,7 @@
   - copy:
       content: "{{
       output.stdout[0] + '\n' + '\n'
-     + output.stdout[1] + '\n' + '\n'
+      + output.stdout[1] + '\n' + '\n'
       + output.stdout[2] + '\n' + '\n'
       + output.stdout[3] + '\n' + '\n'
       + output.stdout[4] + '\n' + '\n'
