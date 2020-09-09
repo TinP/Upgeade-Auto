@@ -1,7 +1,7 @@
 ---
 
 - name: Show Commands Playbook
-  hosts: local
+  hosts: 172.18.173.64
   tasks:
   - name: Run 'Base Line'
     ios_command:
