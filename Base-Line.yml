@@ -1,11 +1,9 @@
 ---
-
+- name: Show Commands Playbook
+  tasks:
   - name: Run 'Base Line Configuration'
 
     ios_command:
-      provider: "{{ provider }}"
-      authorize: yes
-
       commands:
         - show run
         - show version
