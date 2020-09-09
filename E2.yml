@@ -1,35 +1,12 @@
 ---
 
 - name: Show Commands Playbook
-  hosts: [all]
-  gather_facts: no
-  connection: local
   ignore_errors: yes
-
   tasks:
-  - name: Get Login credentials
-    include_vars: /mnt/d/Lab/NTT-Automate/Config/access.yml
 
-  - name: Define Provider
-    set_fact:
-      provider:
-        host: "{{ inventory_hostname }}"
-        username: "{{ access['username'] }}"
-        password: "{{ access['password'] }}"
-
-  - name: Reload
-    ios_command:
-      provider: "{{ provider }}"
-      authorize: yes
-      commands:
-        - command: "reload"
-          prompt: "[confirm]"
-          answer: "\r"
   - name: Run 'Base Line'
 
     ios_command:
-      provider: "{{ provider }}"
-      authorize: yes
 
       commands:
         - show run
