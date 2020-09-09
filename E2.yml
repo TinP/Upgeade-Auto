@@ -3,7 +3,7 @@
 - name: Show Commands Playbook
   hosts: local
   gather_facts: no
-  connection: local
+  connection: network_cli
   ignore_errors: yes
 
   tasks:
