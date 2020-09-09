@@ -5,6 +5,3 @@
   connection: network_cli
   gather_facts: no
   become: yes
-  tasks:
-  - name: Run 'Base Line'
- 
