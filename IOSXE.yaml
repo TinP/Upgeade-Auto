@@ -13,4 +13,5 @@
   - name: Test reachability to 172.18.173.64 using default vrf
     ios_ping:
       dest: 172.18.173.64
+      timeout: 3000
 ...
