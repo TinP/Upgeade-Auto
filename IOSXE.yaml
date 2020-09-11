@@ -11,54 +11,7 @@
   strategy: linear
 
   tasks:
-  - name: Run 'Base Line Configuration'
-
-    ios_command:
-      commands:
-        - show run
-        - show version
-        - show ip interface br
-        - show boot
-        - show inventory
-
-    register: output
-
-  - copy:
-      content: "{{
-      output.stdout[0] + '\n' + '\n'
-     + output.stdout[1] + '\n' + '\n'
-      + output.stdout[2] + '\n' + '\n'
-      + output.stdout[3] + '\n' + '\n'
-      + output.stdout[4] + '\n' + '\n'
-      }}"
-
-      dest: "/mnt/d/Lab/NTT-Automate/output before.txt"
-
- 
-  - name: Download IOS fron TFTP
-    ios_command:
-      commands:
-        - command: "copy tftp://1.1.1.1/cat3k_caa-universalk9.16.06.07.SPA.bin flash:"
-          prompt: "]? "
-          answer: "\r"
-    vars:
-        ansible_command_timeout: 6000
-   
-  - name: Run 'Base_Line_Configuration_16_to_16' 
-    ios_command:
-      commands:
-         -   request platform software package install switch all file flash:cat3k_caa-universalk9.16.06.07.SPA.bin on-reboot new verbose
- 
-
-  - name: Write_Config_Memory
-    ios_config:
-      save_when: modified
- 
-  - name: Reload
-    ios_command:
-       commands:
-        - command: "reload"
-          prompt: "[confirm]"
-          answer: "\r"
-
+  - name: Test reachability to 172.18.173.64 using default vrf
+    ios_ping:
+      dest: 172.18.173.64
 ...
