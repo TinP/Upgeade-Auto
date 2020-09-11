@@ -7,13 +7,10 @@
   ignore_errors: yes
   become: yes
 
-
-
   tasks:
-
   - name: Change ssh port to 22
-  set_fact:
-    ansible_port: 22
+    set_fact:
+      ansible_port: 22
 
 
 ...
