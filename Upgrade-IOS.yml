@@ -1,0 +1,52 @@
+---
+
+- name: Show Commands Playbook
+  hosts: [all]
+  gather_facts: no
+  connection: local
+  ignore_errors: yes
+
+  tasks:
+  - name: Get Login credentials
+    include_vars: /mnt/d/Lab/NTT-Automate/Config/access.yml
+
+  - name: Define Provider
+    set_fact:
+      provider:
+        host: "{{ inventory_hostname }}"
+        username: "{{ access['username'] }}"
+        password: "{{ access['password'] }}"
+
+  - name: Reload
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+      commands:
+        - command: "reload"
+          prompt: "[confirm]"
+          answer: "\r"
+  - name: Run 'Base Line'
+
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+
+      commands:
+        - show run
+        - show version
+        - show ip interface br
+        - show boot
+        - show inventory
+
+    register: output
+
+  - copy:
+      content: "{{
+      output.stdout[0] + '\n' + '\n'
+     + output.stdout[1] + '\n' + '\n'
+      + output.stdout[2] + '\n' + '\n'
+      + output.stdout[3] + '\n' + '\n'
+      + output.stdout[4] + '\n' + '\n'
+      }}"
+
+      dest: "/mnt/d/Lab/NTT-Automate/{{ inventory_hostname }} before.txt"

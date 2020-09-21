@@ -1,0 +1,111 @@
+---
+
+- name: Show Commands Playbook
+  hosts: [csr]
+  connection: network_cli
+  gather_facts: no
+  connection: local
+  ignore_errors: yes
+  become: yes
+  become_method: enable
+  strategy: linear
+
+  vars_prompt:
+  - name: "version_install"
+    prompt: "software IOS-XE 16 or 3"
+    private: no
+  - name: "reboot_bool"
+    prompt: "Reboot the devices at end of play? (Y or N)"
+    private: no
+  - name: "server_ip"
+    prompt: "IP address of this host TFTP"
+    private: no
+
+  tasks:
+
+  - name: Get Login credentials
+    include_vars: /mnt/d/Lab/NTT-Automate/Config/access.yml
+
+  - name: Define Provider
+    set_fact:
+      provider:
+        host: "{{ inventory_hostname }}"
+        username: "{{ access['username'] }}"
+        password: "{{ access['password'] }}"
+        timeout: 6000
+
+  - name: Run 'Base Line Configuration'
+
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+
+      commands:
+        - show run
+        - show version
+        - show ip interface br
+        - show boot
+        - show inventory
+
+    register: output
+
+  - copy:
+      content: "{{
+      output.stdout[0] + '\n' + '\n'
+     + output.stdout[1] + '\n' + '\n'
+      + output.stdout[2] + '\n' + '\n'
+      + output.stdout[3] + '\n' + '\n'
+      + output.stdout[4] + '\n' + '\n'
+      }}"
+
+      dest: "/mnt/d/Lab/NTT-Automate/{{ inventory_hostname }} before.txt"
+
+ 
+  - name: Download IOS fron TFTP
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+      commands:
+        - command: "copy tftp://{{ server_ip }}/cat3k_caa-universalk9.16.06.07.SPA.bin flash:"
+          prompt: "]? "
+          answer: "\r"
+    vars:
+        ansible_command_timeout: 6000
+   
+  - name: Run 'Base_Line_Configuration_16_to_16' 
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+      commands:
+         -   request platform software package install switch all file flash:cat3k_caa-universalk9.16.06.07.SPA.bin on-reboot new verbose
+    when: 
+       - version_install == "16"
+ 
+
+  - name: Run 'Base_Line_Configuration_3_to_16' 
+    ios_command:
+      provider: "{{ provider }}"
+      authorize: yes
+      commands:
+         -   software install file flash:cat3k_caa-universalk9.16.06.07.SPA.bin on-reboot new verbose
+    when: 
+       - version_install == "3"
+
+
+  - name: Write_Config_Memory
+    ios_config:
+      provider: "{{ provider }}"
+      authorize: yes 
+      save_when: modified
+ 
+  - name: Reload
+    ios_command:
+       provider: "{{ provider }}"
+       authorize: yes
+       commands:
+        - command: "reload"
+          prompt: "[confirm]"
+          answer: "\r"
+    when: 
+       - reboot_bool == "Y"
+...

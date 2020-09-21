@@ -1,0 +1,12 @@
+- name: Start Get Base Line
+  hosts: all
+  connection: 
+  gather_facts: no
+  become: yes
+  tasks:
+  - name: Write_Config_Memory
+    ios_config:
+      provider: "{{ provider }}"
+      authorize: yes 
+      save_when: modified
+ 

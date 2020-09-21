@@ -1,8 +1,10 @@
----
-- name: Show Commands Playbook
+- name: Start Get Base Line
+  hosts: all
+  connection: 
+  gather_facts: no
+  become: yes
   tasks:
   - name: Run 'Base Line Configuration'
-
     ios_command:
       commands:
         - show run
@@ -16,12 +18,10 @@
   - copy:
       content: "{{
       output.stdout[0] + '\n' + '\n'
-     + output.stdout[1] + '\n' + '\n'
+      + output.stdout[1] + '\n' + '\n'
       + output.stdout[2] + '\n' + '\n'
       + output.stdout[3] + '\n' + '\n'
       + output.stdout[4] + '\n' + '\n'
       }}"
 
       dest: "/mnt/d/Lab/NTT-Automate/{{ inventory_hostname }} before.txt"
-
-...
